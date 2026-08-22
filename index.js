@@ -29,7 +29,7 @@ const TERMS = [
   "production expansion","capacity expansion","capital expenditure","capex",
   "product launch","commercial launch","new product","strategic review",
   "restructuring","divestiture","special dividend","dividend increase",
-  "settlement","court ruling","patent granted","patent issued","ceo appointed",
+  "settlement","patent granted","patent issued","ceo appointed",
   "new ceo","management change","material agreement","definitive agreement",
   "letter of intent","nasdaq compliance","nasdaq delisting","reverse split",
   "stock split","sec filing","8-k","10-q","10-k","analyst upgrade",
