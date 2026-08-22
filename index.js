@@ -1,3 +1,13 @@
+/* =========================================================
+   NASDAQ NEWS BOT
+   D1 + MULTI SOURCE + FILTER + TURKISH + TELEGRAM
+   ========================================================= */
+
+
+/* =========================================================
+   HABER KAYNAKLARI
+   ========================================================= */
+
 const FEEDS = [
   {
     name: "Reuters",
@@ -18,16 +28,31 @@ const FEEDS = [
   {
     name: "Yahoo Finance",
     url: "https://finance.yahoo.com/news/rssindex"
+  },
+
+  /* Şirket basın açıklamaları için ek kaynaklar */
+  {
+    name: "GlobeNewswire",
+    url: "https://news.google.com/rss/search?q=site%3Aglobenewswire.com+NASDAQ+stocks+when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
+  },
+  {
+    name: "PR Newswire",
+    url: "https://news.google.com/rss/search?q=site%3Aprnewswire.com+NASDAQ+stocks+when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
+  },
+  {
+    name: "Business Wire",
+    url: "https://news.google.com/rss/search?q=site%3Abusinesswire.com+NASDAQ+stocks+when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
   }
 ];
 
+
 /* =========================================================
-   HABER FİLTRESİ
+   HABER FİLTRELERİ
    ========================================================= */
 
 const FILTER_TERMS = [
 
-  // FDA / REGULATORY
+  /* FDA / REGULATORY */
   "fda",
   "fda approval",
   "fda approved",
@@ -36,8 +61,9 @@ const FILTER_TERMS = [
   "regulatory approval",
   "regulatory clearance",
   "regulatory authorization",
+  "regulatory decision",
 
-  // CLINICAL
+  /* CLINICAL */
   "phase 1",
   "phase 2",
   "phase 3",
@@ -58,11 +84,13 @@ const FILTER_TERMS = [
   "interim data",
   "positive results",
   "positive data",
+  "negative results",
   "patient enrollment",
   "first patient dosed",
   "patient dosed",
+  "trial enrollment",
 
-  // BIOTECH / PHARMA
+  /* BIOTECH / PHARMA */
   "drug candidate",
   "drug development",
   "drug approval",
@@ -73,8 +101,12 @@ const FILTER_TERMS = [
   "treatment",
   "biologic",
   "commercialization",
+  "bLA",
+  "nda",
+  "ind",
+  "pdufa",
 
-  // EARNINGS
+  /* EARNINGS */
   "earnings",
   "earnings results",
   "earnings report",
@@ -90,8 +122,11 @@ const FILTER_TERMS = [
   "lowers guidance",
   "full-year guidance",
   "outlook",
+  "revenue",
+  "profit",
+  "net income",
 
-  // QUARTERS
+  /* QUARTERS */
   "q1",
   "q2",
   "q3",
@@ -101,7 +136,7 @@ const FILTER_TERMS = [
   "third quarter",
   "fourth quarter",
 
-  // DILUTION / OFFERING / FINANCING
+  /* DILUTION / OFFERING / FINANCING */
   "dilution",
   "dilutive",
   "share dilution",
@@ -125,7 +160,7 @@ const FILTER_TERMS = [
   "warrant",
   "warrants",
 
-  // BUYBACK
+  /* BUYBACK */
   "share repurchase",
   "share repurchases",
   "stock repurchase",
@@ -137,7 +172,7 @@ const FILTER_TERMS = [
   "repurchase program",
   "repurchase authorization",
 
-  // CONTRACTS / ORDERS
+  /* CONTRACTS / ORDERS */
   "new contract",
   "major contract",
   "government contract",
@@ -155,7 +190,7 @@ const FILTER_TERMS = [
   "licensing agreement",
   "license agreement",
 
-  // PARTNERSHIPS
+  /* PARTNERSHIPS */
   "partnership",
   "strategic partnership",
   "strategic agreement",
@@ -166,7 +201,7 @@ const FILTER_TERMS = [
   "technology partnership",
   "research collaboration",
 
-  // ACQUISITION / MERGER
+  /* ACQUISITION / MERGER */
   "acquisition",
   "acquires",
   "acquired",
@@ -177,7 +212,7 @@ const FILTER_TERMS = [
   "business combination",
   "takeover",
 
-  // INVESTMENT / EXPANSION
+  /* INVESTMENT / INFRASTRUCTURE */
   "strategic investment",
   "company investment",
   "investment in",
@@ -196,8 +231,11 @@ const FILTER_TERMS = [
   "capacity expansion",
   "expansion project",
   "expands operations",
+  "capital expenditure",
+  "capital expenditures",
+  "capex",
 
-  // PRODUCT / TECHNOLOGY
+  /* PRODUCT / TECHNOLOGY */
   "product launch",
   "launches product",
   "new product",
@@ -208,7 +246,7 @@ const FILTER_TERMS = [
   "production started",
   "commercial launch",
 
-  // CORPORATE ACTIONS
+  /* CORPORATE ACTIONS */
   "strategic review",
   "strategic alternatives",
   "restructuring",
@@ -221,7 +259,7 @@ const FILTER_TERMS = [
   "special dividend",
   "dividend increase",
 
-  // LEGAL / IP
+  /* LEGAL / IP */
   "settlement",
   "lawsuit settlement",
   "legal settlement",
@@ -232,7 +270,7 @@ const FILTER_TERMS = [
   "patent issued",
   "intellectual property",
 
-  // MANAGEMENT
+  /* MANAGEMENT */
   "ceo appointed",
   "new ceo",
   "chief executive officer",
@@ -241,7 +279,7 @@ const FILTER_TERMS = [
   "management change",
   "ceo resignation",
 
-  // MATERIAL EVENTS
+  /* MATERIAL EVENTS */
   "material agreement",
   "material event",
   "definitive agreement",
@@ -249,7 +287,7 @@ const FILTER_TERMS = [
   "memorandum of understanding",
   "mou",
 
-  // NASDAQ / LISTING
+  /* NASDAQ */
   "nasdaq compliance",
   "nasdaq listing",
   "nasdaq delisting",
@@ -258,14 +296,14 @@ const FILTER_TERMS = [
   "reverse split",
   "stock split",
 
-  // SEC
+  /* SEC */
   "8-k",
   "10-q",
   "10-k",
   "13f",
   "sec filing",
 
-  // ANALYST
+  /* ANALYST */
   "analyst upgrade",
   "analyst downgrade",
   "price target raised",
@@ -273,7 +311,7 @@ const FILTER_TERMS = [
   "price target increased",
   "price target decreased",
 
-  // OWNERSHIP
+  /* OWNERSHIP */
   "institutional investment",
   "institutional investor",
   "takes stake",
@@ -284,7 +322,7 @@ const FILTER_TERMS = [
 
 
 /* =========================================================
-   GENEL PİYASA İÇERİĞİ ENGELLEYİCİLERİ
+   SADECE GENEL PİYASA HABERLERİNİ ELE
    ========================================================= */
 
 const MARKET_ONLY_TERMS = [
@@ -316,13 +354,62 @@ const MARKET_ONLY_TERMS = [
 
 
 /* =========================================================
+   GÜÇLÜ ŞİRKET KATALİZÖRLERİ
+   ========================================================= */
+
+const STRONG_CATALYST_TERMS = [
+  "fda",
+  "phase 1",
+  "phase 2",
+  "phase 3",
+  "clinical",
+  "trial",
+  "drug approval",
+  "regulatory approval",
+  "pdufa",
+  "earnings",
+  "eps",
+  "revenue",
+  "guidance",
+  "dilution",
+  "offering",
+  "financing",
+  "buyback",
+  "repurchase",
+  "acquisition",
+  "merger",
+  "contract",
+  "purchase order",
+  "partnership",
+  "collaboration",
+  "licensing",
+  "strategic agreement",
+  "new facility",
+  "capacity expansion",
+  "product launch",
+  "infrastructure investment",
+  "reverse split",
+  "stock split",
+  "nasdaq compliance",
+  "nasdaq delisting",
+  "patent",
+  "strategic investment",
+  "government contract",
+  "defense contract"
+];
+
+
+/* =========================================================
    METİN TEMİZLEME
    ========================================================= */
 
 function cleanText(text) {
-  if (!text) return "";
 
-  return text
+  if (!text) {
+    return "";
+  }
+
+  return String(text)
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1")
     .replace(/<[^>]*>/g, "")
     .replace(/&amp;/gi, "&")
@@ -331,6 +418,17 @@ function cleanText(text) {
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
     .replace(/&#x27;/gi, "'")
+    .replace(/&#(\d+);/g, (_, n) => {
+
+      try {
+        return String.fromCharCode(
+          Number(n)
+        );
+      } catch {
+        return "";
+      }
+
+    })
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -341,10 +439,23 @@ function cleanText(text) {
    ========================================================= */
 
 function escapeHtml(text) {
+
   return String(text || "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+
+/* =========================================================
+   URL ESCAPE
+   ========================================================= */
+
+function escapeUrl(url) {
+
+  return String(url || "")
+    .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;");
 }
 
@@ -356,75 +467,72 @@ function escapeHtml(text) {
 function passesFilter(item) {
 
   const title =
-    String(item.title || "").toLowerCase();
+    String(item.title || "")
+      .toLowerCase();
 
   const description =
-    String(item.description || "").toLowerCase();
+    String(item.description || "")
+      .toLowerCase();
 
   const text =
     `${title} ${description}`;
 
-  /* Önce önemli terim aranır */
+
+  /* En az bir önemli terim olmalı */
+
   const matchedTerm =
     FILTER_TERMS.find(term =>
-      text.includes(term.toLowerCase())
+      text.includes(
+        term.toLowerCase()
+      )
     );
 
+
   if (!matchedTerm) {
+
+    console.log(
+      "FİLTRE DIŞI:",
+      item.title
+    );
+
     return false;
   }
 
-  /*
-   * Sadece genel piyasa haberlerinde
-   * şirket-spesifik katalizör yoksa ele.
-   *
-   * Ancak FDA, Phase, clinical, offering,
-   * buyback, acquisition gibi güçlü terimler
-   * varsa kabul et.
-   */
 
-  const strongCatalystTerms = [
-    "fda",
-    "phase 1",
-    "phase 2",
-    "phase 3",
-    "clinical",
-    "dilution",
-    "offering",
-    "financing",
-    "buyback",
-    "repurchase",
-    "acquisition",
-    "merger",
-    "contract",
-    "purchase order",
-    "partnership",
-    "collaboration",
-    "licensing",
-    "strategic agreement",
-    "new facility",
-    "capacity expansion",
-    "product launch",
-    "regulatory approval",
-    "reverse split",
-    "stock split",
-    "nasdaq compliance",
-    "nasdaq delisting"
-  ];
+  /* Güçlü katalizör kontrolü */
 
   const hasStrongCatalyst =
-    strongCatalystTerms.some(term =>
-      text.includes(term)
+    STRONG_CATALYST_TERMS.some(term =>
+      text.includes(
+        term.toLowerCase()
+      )
     );
+
+
+  /*
+   * Başlık doğrudan genel piyasa haberi ise
+   * ve güçlü şirket katalizörü yoksa alma.
+   */
 
   const isMarketOnly =
     MARKET_ONLY_TERMS.some(term =>
       title.includes(term)
     );
 
-  if (isMarketOnly && !hasStrongCatalyst) {
+
+  if (
+    isMarketOnly &&
+    !hasStrongCatalyst
+  ) {
+
+    console.log(
+      "GENEL PİYASA HABERİ ELENDİ:",
+      item.title
+    );
+
     return false;
   }
+
 
   console.log(
     "FİLTREDEN GEÇTİ:",
@@ -446,18 +554,27 @@ function getItems(xml) {
   const items = [];
 
   const matches =
-    xml.match(/<item>[\s\S]*?<\/item>/gi) || [];
+    xml.match(
+      /<item>[\s\S]*?<\/item>/gi
+    ) || [];
+
 
   for (const item of matches) {
 
     const titleMatch =
-      item.match(/<title>([\s\S]*?)<\/title>/i);
+      item.match(
+        /<title>([\s\S]*?)<\/title>/i
+      );
 
     const linkMatch =
-      item.match(/<link>([\s\S]*?)<\/link>/i);
+      item.match(
+        /<link>([\s\S]*?)<\/link>/i
+      );
 
     const dateMatch =
-      item.match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+      item.match(
+        /<pubDate>([\s\S]*?)<\/pubDate>/i
+      );
 
     const sourceMatch =
       item.match(
@@ -469,43 +586,66 @@ function getItems(xml) {
         /<description>([\s\S]*?)<\/description>/i
       );
 
-    if (!titleMatch || !linkMatch) {
+
+    if (
+      !titleMatch ||
+      !linkMatch
+    ) {
       continue;
     }
 
+
     const title =
-      cleanText(titleMatch[1]);
+      cleanText(
+        titleMatch[1]
+      );
 
     const link =
-      cleanText(linkMatch[1]);
+      cleanText(
+        linkMatch[1]
+      );
 
     const pubDate =
       dateMatch
-        ? cleanText(dateMatch[1])
+        ? cleanText(
+            dateMatch[1]
+          )
         : "";
 
     const source =
       sourceMatch
-        ? cleanText(sourceMatch[1])
+        ? cleanText(
+            sourceMatch[1]
+          )
         : "";
 
     const description =
       descriptionMatch
-        ? cleanText(descriptionMatch[1])
+        ? cleanText(
+            descriptionMatch[1]
+          )
         : "";
 
-    if (!title || !link) {
+
+    if (
+      !title ||
+      !link
+    ) {
       continue;
     }
 
+
     items.push({
+
       title,
       link,
       pubDate,
       source,
       description
+
     });
   }
+
 
   return items;
 }
@@ -518,7 +658,8 @@ function getItems(xml) {
 async function makeKey(link) {
 
   const data =
-    new TextEncoder().encode(link);
+    new TextEncoder()
+      .encode(link);
 
   const hash =
     await crypto.subtle.digest(
@@ -526,12 +667,123 @@ async function makeKey(link) {
       data
     );
 
+
   return Array
-    .from(new Uint8Array(hash))
+    .from(
+      new Uint8Array(hash)
+    )
     .map(
-      b => b.toString(16).padStart(2, "0")
+      b =>
+        b.toString(16)
+          .padStart(2, "0")
     )
     .join("");
+}
+
+
+/* =========================================================
+   D1 TABLOSU
+   ========================================================= */
+
+async function initDatabase(env) {
+
+  await env.NEWS_DB.prepare(`
+    CREATE TABLE IF NOT EXISTS news_sent (
+      link_hash TEXT PRIMARY KEY,
+      link TEXT NOT NULL,
+      title TEXT,
+      source TEXT,
+      sent_at INTEGER NOT NULL
+    )
+  `).run();
+
+}
+
+
+/* =========================================================
+   D1'DE HABER VAR MI?
+   ========================================================= */
+
+async function alreadySent(
+  env,
+  hash
+) {
+
+  const result =
+    await env.NEWS_DB
+      .prepare(`
+        SELECT link_hash
+        FROM news_sent
+        WHERE link_hash = ?
+        LIMIT 1
+      `)
+      .bind(hash)
+      .first();
+
+  return !!result;
+}
+
+
+/* =========================================================
+   D1'E KAYDET
+   ========================================================= */
+
+async function saveSentNews(
+  env,
+  hash,
+  item
+) {
+
+  await env.NEWS_DB
+    .prepare(`
+      INSERT OR IGNORE INTO news_sent
+      (
+        link_hash,
+        link,
+        title,
+        source,
+        sent_at
+      )
+      VALUES (?, ?, ?, ?, ?)
+    `)
+    .bind(
+      hash,
+      item.link,
+      item.title,
+      item.source ||
+        item.feedSource ||
+        "",
+      Date.now()
+    )
+    .run();
+}
+
+
+/* =========================================================
+   ESKİ KAYITLARI TEMİZLE
+   7 GÜNDEN ESKİ HABERLERİ SİL
+   ========================================================= */
+
+async function cleanupDatabase(env) {
+
+  const sevenDays =
+    Date.now() -
+    (
+      7 *
+      24 *
+      60 *
+      60 *
+      1000
+    );
+
+
+  await env.NEWS_DB
+    .prepare(`
+      DELETE FROM news_sent
+      WHERE sent_at < ?
+    `)
+    .bind(sevenDays)
+    .run();
 }
 
 
@@ -539,11 +791,14 @@ async function makeKey(link) {
    TÜRKÇE ÇEVİRİ
    ========================================================= */
 
-async function translateToTurkish(text) {
+async function translateToTurkish(
+  text
+) {
 
   if (!text) {
     return "";
   }
+
 
   try {
 
@@ -556,31 +811,50 @@ async function translateToTurkish(text) {
       "&q=" +
       encodeURIComponent(text);
 
+
     const response =
       await fetch(url);
+
 
     if (!response.ok) {
       return text;
     }
 
+
     const data =
       await response.json();
 
-    if (!data || !data[0]) {
+
+    if (
+      !data ||
+      !data[0]
+    ) {
       return text;
     }
 
+
     let translated = "";
 
-    for (const part of data[0]) {
 
-      if (part && part[0]) {
-        translated += part[0];
+    for (
+      const part of data[0]
+    ) {
+
+      if (
+        part &&
+        part[0]
+      ) {
+
+        translated +=
+          part[0];
       }
-
     }
 
-    return translated.trim() || text;
+
+    return (
+      translated.trim() ||
+      text
+    );
 
   } catch (error) {
 
@@ -602,7 +876,10 @@ async function getNews() {
 
   const allNews = [];
 
-  for (const feed of FEEDS) {
+
+  for (
+    const feed of FEEDS
+  ) {
 
     try {
 
@@ -617,28 +894,44 @@ async function getNews() {
           }
         );
 
+
       if (!response.ok) {
+
         console.log(
           `Feed HTTP hatası: ${feed.name}`,
           response.status
         );
+
         continue;
       }
+
 
       const xml =
         await response.text();
 
+
       const items =
         getItems(xml);
 
-      for (const item of items) {
+
+      for (
+        const item of items
+      ) {
 
         allNews.push({
-          ...item,
-          feedSource: feed.name
-        });
 
+          ...item,
+
+          feedSource:
+            feed.name
+
+        });
       }
+
+
+      console.log(
+        `${feed.name}: ${items.length} haber`
+      );
 
     } catch (error) {
 
@@ -646,9 +939,9 @@ async function getNews() {
         `Feed hatası: ${feed.name}`,
         error.message
       );
-
     }
   }
+
 
   return allNews;
 }
@@ -667,47 +960,53 @@ async function sendTelegram(
     await fetch(
       `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,
       {
-        method: "POST",
+
+        method:
+          "POST",
 
         headers: {
+
           "Content-Type":
             "application/json"
+
         },
 
-        body: JSON.stringify({
+        body:
+          JSON.stringify({
 
-          chat_id:
-            env.TELEGRAM_CHAT_ID,
+            chat_id:
+              env.TELEGRAM_CHAT_ID,
 
-          text:
-            message,
+            text:
+              message,
 
-          parse_mode:
-            "HTML",
+            parse_mode:
+              "HTML",
 
-          /*
-           * ÖNEMLİ:
-           * Yahoo/Telegram İngilizce önizlemesi
-           * artık çıkmayacak.
-           */
-          disable_web_page_preview:
-            true
-        })
+            disable_web_page_preview:
+              true
+
+          })
+
       }
     );
+
 
   if (!response.ok) {
 
     const errorText =
       await response.text();
 
+
     console.log(
       "Telegram hatası:",
       errorText
     );
 
+
     return false;
   }
+
 
   return true;
 }
@@ -719,68 +1018,115 @@ async function sendTelegram(
 
 async function sendNews(env) {
 
+  /*
+   * D1 hazırla
+   */
+
+  await initDatabase(env);
+
+
+  /*
+   * Eski kayıtları temizle
+   */
+
+  await cleanupDatabase(env);
+
+
+  /*
+   * Haberleri çek
+   */
+
   const news =
     await getNews();
+
 
   if (!news.length) {
 
     return {
+
       sent: 0,
+
+      filtered: 0,
+
       message:
         "Yeni haber bulunamadı."
+
     };
   }
 
 
-  /* -------------------------------------------------------
-     AYNI LINKLERİ TEKLE
-     ------------------------------------------------------- */
+  /* =======================================================
+     AYNI HABERLERİ TEKLE
+     ======================================================= */
 
   const unique = [];
 
   const seen =
     new Set();
 
-  for (const item of news) {
 
-    if (seen.has(item.link)) {
+  for (
+    const item of news
+  ) {
+
+    if (
+      seen.has(item.link)
+    ) {
       continue;
     }
 
-    seen.add(item.link);
+
+    seen.add(
+      item.link
+    );
+
 
     unique.push(item);
   }
 
 
-  /* -------------------------------------------------------
+  /* =======================================================
      YENİDEN ESKİYE SIRALA
-     ------------------------------------------------------- */
+     ======================================================= */
 
-  unique.sort((a, b) => {
+  unique.sort(
+    (a, b) => {
 
-    const da =
-      a.pubDate
-        ? new Date(a.pubDate).getTime()
-        : 0;
-
-    const db =
-      b.pubDate
-        ? new Date(b.pubDate).getTime()
-        : 0;
-
-    return db - da;
-  });
+      const da =
+        a.pubDate
+          ? new Date(
+              a.pubDate
+            ).getTime()
+          : 0;
 
 
-  /* -------------------------------------------------------
-     KRİTİK:
-     KV'YE GİRMEDEN ÖNCE FİLTRE
-     ------------------------------------------------------- */
+      const db =
+        b.pubDate
+          ? new Date(
+              b.pubDate
+            ).getTime()
+          : 0;
+
+
+      return db - da;
+
+    }
+  );
+
+
+  /* =======================================================
+     KRİTİK NOKTA:
+
+     FİLTRE ÖNCE
+     D1 SONRA
+
+     Önemsiz haber D1'E GİRMEZ.
+     ======================================================= */
 
   const filtered =
     unique.filter(
-      item => passesFilter(item)
+      item =>
+        passesFilter(item)
     );
 
 
@@ -789,277 +1135,52 @@ async function sendNews(env) {
     unique.length
   );
 
+
   console.log(
     "Filtreyi geçen:",
     filtered.length
   );
 
 
-  if (!filtered.length) {
+  if (
+    !filtered.length
+  ) {
 
     return {
+
       sent: 0,
+
+      filtered: 0,
+
       message:
         "Filtreyi geçen haber bulunamadı."
+
     };
   }
 
 
-  /* -------------------------------------------------------
-     MAKSİMUM 10
-     ------------------------------------------------------- */
+  /* =======================================================
+     MAKSİMUM 10 HABER
+     ======================================================= */
 
   let sent = 0;
 
-  for (const item of filtered) {
 
-    if (sent >= 10) {
+  for (
+    const item of filtered
+  ) {
+
+    if (
+      sent >= 10
+    ) {
       break;
     }
 
 
-    /* -----------------------------------------------------
-       KV KONTROLÜ
-       ----------------------------------------------------- */
-
-    const key =
-      `news:${await makeKey(item.link)}`;
-
-    const alreadySent =
-      await env.NEWS_SENT.get(key);
-
-    if (alreadySent) {
-      continue;
-    }
-
-
-    /* -----------------------------------------------------
-       BAŞLIK ÇEVİR
-       ----------------------------------------------------- */
-
-    const translatedTitle =
-      await translateToTurkish(
-        item.title
-      );
-
-
-    /* -----------------------------------------------------
-       AÇIKLAMA ÇEVİR
-       ----------------------------------------------------- */
-
-    let translatedDescription = "";
-
-    if (item.description) {
-
-      translatedDescription =
-        await translateToTurkish(
-          item.description
-        );
-    }
-
-
-    /* -----------------------------------------------------
-       AÇIKLAMA UZUNLUĞU
-       ----------------------------------------------------- */
-
-    if (
-      translatedDescription.length > 700
-    ) {
-
-      translatedDescription =
-        translatedDescription
-          .slice(0, 700)
-          .trim() +
-        "...";
-    }
-
-
-    /* -----------------------------------------------------
-       HTML TEMİZLE
-       ----------------------------------------------------- */
-
-    const title =
-      escapeHtml(
-        translatedTitle
-      );
-
-    const description =
-      escapeHtml(
-        translatedDescription
-      );
-
-    const source =
-      escapeHtml(
-        item.source ||
-        item.feedSource
-      );
-
-
-    /* -----------------------------------------------------
-       TELEGRAM MESAJI
-       ----------------------------------------------------- */
-
-    let message =
-      `📰 <b>NASDAQ / ABD PİYASALARI</b>\n\n` +
-      `<b>${title}</b>\n\n`;
-
-    if (description) {
-
-      message +=
-        `${description}\n\n`;
-    }
-
-    message +=
-      `📌 Kaynak: ${source}\n\n` +
-      `<a href="${item.link}">🔗 Haberi Aç</a>`;
-
-
-    /* -----------------------------------------------------
-       TELEGRAM'A GÖNDER
-       ----------------------------------------------------- */
-
-    const success =
-      await sendTelegram(
-        env,
-        message
-      );
-
-    if (!success) {
-      continue;
-    }
-
-
-    /* -----------------------------------------------------
-       SADECE BAŞARILI GÖNDERİMDEN SONRA KV
-       ----------------------------------------------------- */
-
-    await env.NEWS_SENT.put(
-      key,
-      "1",
-      {
-        expirationTtl:
-          86400
-      }
-    );
-
-    sent++;
-
-  }
-
-
-  return {
-
-    sent,
-
-    filtered:
-      filtered.length,
-
-    message:
-      `${sent} filtrelenmiş haber gönderildi.`
-
-  };
-}
-
-
-/* =========================================================
-   WORKER
-   ========================================================= */
-
-export default {
-
-  async fetch(request, env) {
-
-    const url =
-      new URL(request.url);
-
-
-    /* -----------------------------------------------------
-       TEST
-       ----------------------------------------------------- */
-
-    if (
-      url.pathname === "/test"
-    ) {
-
-      try {
-
-        const result =
-          await sendNews(env);
-
-        return new Response(
-
-          JSON.stringify(
-            {
-              ok: true,
-              ...result
-            },
-            null,
-            2
-          ),
-
-          {
-            headers: {
-              "Content-Type":
-                "application/json"
-            }
-          }
-        );
-
-      } catch (error) {
-
-        return new Response(
-
-          JSON.stringify(
-            {
-              ok: false,
-              error:
-                error.message
-            },
-            null,
-            2
-          ),
-
-          {
-            status: 500,
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            }
-          }
-        );
-      }
-    }
-
-
-    return new Response(
-      "Nasdaq Haber Bot aktif."
-    );
-  },
-
-
-  /* -------------------------------------------------------
-     CRON
-     ------------------------------------------------------- */
-
-  async scheduled(
-    event,
-    env,
-    ctx
-  ) {
-
-    ctx.waitUntil(
-
-      sendNews(env)
-        .catch(error => {
-
-          console.log(
-            "Scheduled hata:",
-            error.message
-          );
-
-        })
-
-    );
-  }
-};
+    /* =====================================================
+       D1 KONTROLÜ
+       ===================================================== */
+
+    const hash =
+      await makeKey(
+        i
