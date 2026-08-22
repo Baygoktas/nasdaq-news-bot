@@ -80,6 +80,53 @@ async function makeKey(link) {
     .join("");
 }
 
+/* =========================
+   TÜRKÇE ÇEVİRİ
+========================= */
+
+async function translateToTurkish(text) {
+  try {
+    const url =
+      "https://translate.googleapis.com/translate_a/single" +
+      "?client=gtx" +
+      "&sl=en" +
+      "&tl=tr" +
+      "&dt=t" +
+      "&q=" +
+      encodeURIComponent(text);
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return text;
+    }
+
+    const data = await response.json();
+
+    if (!data || !data[0]) {
+      return text;
+    }
+
+    let translated = "";
+
+    for (const part of data[0]) {
+      if (part && part[0]) {
+        translated += part[0];
+      }
+    }
+
+    return translated.trim() || text;
+
+  } catch (error) {
+    console.log("Çeviri hatası:", error.message);
+    return text;
+  }
+}
+
+/* =========================
+   HABERLERİ ÇEK
+========================= */
+
 async function getNews() {
   const allNews = [];
 
@@ -102,6 +149,7 @@ async function getNews() {
           feedSource: feed.name
         });
       }
+
     } catch (error) {
       console.log(`Feed hatası: ${feed.name}`, error.message);
     }
@@ -109,6 +157,10 @@ async function getNews() {
 
   return allNews;
 }
+
+/* =========================
+   TELEGRAM'A HABER GÖNDER
+========================= */
 
 async function sendNews(env) {
   const news = await getNews();
@@ -133,6 +185,7 @@ async function sendNews(env) {
   unique.sort((a, b) => {
     const da = a.pubDate ? new Date(a.pubDate).getTime() : 0;
     const db = b.pubDate ? new Date(b.pubDate).getTime() : 0;
+
     return db - da;
   });
 
@@ -147,8 +200,13 @@ async function sendNews(env) {
 
     if (alreadySent) continue;
 
-    const title = escapeHtml(item.title);
-    const source = escapeHtml(item.source || item.feedSource);
+    /* İngilizce başlığı Türkçeye çevir */
+    const translatedTitle = await translateToTurkish(item.title);
+
+    const title = escapeHtml(translatedTitle);
+    const source = escapeHtml(
+      item.source || item.feedSource
+    );
 
     const message =
       `📰 <b>NASDAQ / ABD PİYASALARI</b>\n\n` +
@@ -160,9 +218,11 @@ async function sendNews(env) {
       `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json"
         },
+
         body: JSON.stringify({
           chat_id: env.TELEGRAM_CHAT_ID,
           text: message,
@@ -173,13 +233,21 @@ async function sendNews(env) {
     );
 
     if (!response.ok) {
-      console.log("Telegram hatası:", await response.text());
+      console.log(
+        "Telegram hatası:",
+        await response.text()
+      );
+
       continue;
     }
 
-    await env.NEWS_SENT.put(key, "1", {
-      expirationTtl: 86400
-    });
+    await env.NEWS_SENT.put(
+      key,
+      "1",
+      {
+        expirationTtl: 86400
+      }
+    );
 
     sent++;
   }
@@ -190,13 +258,22 @@ async function sendNews(env) {
   };
 }
 
+/* =========================
+   WORKER
+========================= */
+
 export default {
+
   async fetch(request, env) {
+
     const url = new URL(request.url);
 
-    // Manuel test
+    /* Manuel test */
+
     if (url.pathname === "/test") {
+
       try {
+
         const result = await sendNews(env);
 
         return new Response(
@@ -210,7 +287,9 @@ export default {
             }
           }
         );
+
       } catch (error) {
+
         return new Response(
           JSON.stringify({
             ok: false,
@@ -226,13 +305,19 @@ export default {
       }
     }
 
-    return new Response("Nasdaq Haber Bot aktif.");
+    return new Response(
+      "Nasdaq Haber Bot aktif."
+    );
   },
 
   async scheduled(event, env, ctx) {
+
     ctx.waitUntil(
       sendNews(env).catch(error => {
-        console.log("Scheduled hata:", error.message);
+        console.log(
+          "Scheduled hata:",
+          error.message
+        );
       })
     );
   }
