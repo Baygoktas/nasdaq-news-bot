@@ -1,19 +1,23 @@
 const FEEDS = [
   {
     name: "Reuters",
-    url: "https://news.google.com/rss/search?q=site%3Areuters.com+markets+stocks+when%3A1h&hl=en-US&gl=US&ceid=US%3Aen"
+    url: "https://news.google.com/rss/search?q=site%3Areuters.com+markets+stocks+when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
   },
   {
     name: "CNBC",
-    url: "https://news.google.com/rss/search?q=site%3Acnbc.com+stocks+markets+when%3A1h&hl=en-US&gl=US&ceid=US%3Aen"
+    url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"
   },
   {
     name: "MarketWatch",
-    url: "https://news.google.com/rss/search?q=site%3Amarketwatch.com+stocks+markets+when%3A1h&hl=en-US&gl=US&ceid=US%3Aen"
+    url: "https://news.google.com/rss/search?q=site%3Amarketwatch.com+markets+stocks+when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
   },
   {
     name: "Investing.com",
-    url: "https://news.google.com/rss/search?q=site%3Ainvesting.com+stocks+markets+when%3A1h&hl=en-US&gl=US&ceid=US%3Aen"
+    url: "https://news.google.com/rss/search?q=site%3Ainvesting.com+markets+stocks+when%3A1d&hl=en-US&gl=US&ceid=US%3Aen"
+  },
+  {
+    name: "Yahoo Finance",
+    url: "https://finance.yahoo.com/news/rssindex"
   }
 ];
 
